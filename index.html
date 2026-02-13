@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For my goat 💗</title>
+
+<style>
+* {margin:0; padding:0; box-sizing:border-box; font-family:'Poppins',sans-serif;}
+
+body {
+    min-height: 100vh;
+    background: linear-gradient(-45deg, #ff4e88, #ff6fa5, #ff8cc6, #ffc1da);
+    background-size: 400% 400%;
+    animation: gradientMove 10s ease infinite;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow-x: hidden;
+    padding: 40px 0;
+    color:white;
+}
+
+@keyframes gradientMove {0%{background-position:0% 50%;}50%{background-position:100% 50%;}100%{background-position:0% 50%;}}
+
+.container {
+    backdrop-filter: blur(20px);
+    background: rgba(255,255,255,0.18);
+    padding: 40px;
+    border-radius: 25px;
+    width: 650px;
+    max-width: 95%;
+    text-align: center;
+    box-shadow: 0 0 40px rgba(255,255,255,0.3);
+    animation: fadeIn 2s ease;
+    position: relative;
+    z-index: 2;
+}
+
+@keyframes fadeIn {from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+
+h1 { margin-bottom:15px; animation:heartbeat 2s infinite; }
+@keyframes heartbeat {0%{transform:scale(1);}50%{transform:scale(1.05);}100%{transform:scale(1);} }
+
+.counter { font-family:monospace; margin-bottom:25px; opacity:0.9; }
+.message { font-size:1.15em; line-height:1.8; opacity:0; transition: opacity 1s ease; word-wrap:break-word; min-height:150px; }
+button { margin-top:25px; padding:12px 26px; border:none; background:white; color:#ff4e88; font-weight:600; cursor:pointer; border-radius:30px; transition:0.3s ease; }
+button:hover { transform:scale(1.08); box-shadow:0 0 20px white; }
+.show { opacity:1; }
+
+/* Floating Hearts */
+.heart {position:absolute;width:20px;height:20px;background:rgba(255,255,255,0.6);transform:rotate(45deg);animation:floatUp linear infinite;}
+.heart::before, .heart::after {content:"";position:absolute;width:20px;height:20px;background:rgba(255,255,255,0.6);border-radius:50%;}
+.heart::before {top:-10px; left:0;} .heart::after {left:-10px; top:0;}
+@keyframes floatUp {from{transform:translateY(100vh) rotate(45deg);} to{transform:translateY(-10vh) rotate(45deg);}}
+
+/* Lightbox Slideshow */
+.lightbox {
+    display:none;
+    position:fixed;
+    top:0; left:0;
+    width:100vw; height:100vh;
+    background: rgba(0,0,0,0.8);
+    justify-content:center;
+    align-items:center;
+    z-index:999;
+    cursor:pointer;
+}
+
+.lightbox img {
+    max-width:90%;
+    max-height:80%;
+    border-radius:15px;
+    opacity:0;
+    transform: scale(0.9);
+    transition: opacity 1s ease, transform 1s ease;
+    position:absolute;
+}
+
+.lightbox img.active {
+    opacity:1;
+    transform: scale(1);
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Happy Valentine’s Day, twin 💗</h1>
+    <div class="counter" id="timeTogether"></div>
+    <div class="message" id="mainMessage">
+             Hi twin,<br><br>
+        We started talking on December 1, 2025.<br>
+        It was a random Sunday when I decided to text you.<br>
+        And I didn’t think much of it at first.<br><br>
+        But somewhere along us talking,<br>
+        you became the person I look forward to talking to.<br>
+        You mean so much to me, and I hope the absolute best for you.<br><br>
+        It's only been 75 days but just know I enjoyed every moment.<br>
+        We have had our ups and downs but I will always love you no matter what.<br><br>
+        And that’s what makes it special to me.<br><br>
+        I’m really glad it started with you.<br>
+        I love you so much.<br>
+        From the mini you, Hamdan.
+    </div>
+    <button onclick="reveal()">Open 💌</button>
+</div>
+
+<!-- Cinematic Lightbox Slideshow -->
+<div class="lightbox" id="lightbox">
+    <img src="pic1.jpg" alt="">
+    <img src="pic2.jpg" alt="">
+    <img src="pic3.jpg" alt="">
+    <img src="pic4.jpg" alt="">
+</div>
+<script>
+// ===== REAL LIVE TIMER =====
+const startDate = new Date("2025-12-01T00:00:00");
+function updateCounter(){
+    const now = new Date();
+    const diff = now - startDate;
+
+    if(diff < 0){
+        document.getElementById("timeTogether").innerText = "Waiting for our story to begin...";
+        return;
+    }
+
+    const seconds = Math.floor(diff/1000) % 60;
+    const minutes = Math.floor(diff/(1000*60)) % 60;
+    const hours = Math.floor(diff/(1000*60*60)) % 24;
+    const days = Math.floor(diff/(1000*60*60*24));
+
+    document.getElementById("timeTogether").innerText =
+        `${days} days • ${hours} hours • ${minutes} minutes • ${seconds} seconds`;
+}
+setInterval(updateCounter, 1000);
+updateCounter();
+
+
+// ===== TYPEWRITER WITH SLIDESHOW TEASER =====
+const messageElement = document.getElementById("mainMessage");
+const lines = messageElement.innerHTML.split("<br>");
+messageElement.innerHTML = "";
+messageElement.classList.add("show");
+
+function typeLines(lineIndex=0){
+    if(lineIndex >= lines.length){
+        // Teaser message for slideshow
+        const teaser = document.createElement("div");
+        teaser.style.opacity = "0";
+        teaser.style.marginTop = "15px";
+        teaser.style.fontStyle = "italic";
+        teaser.style.fontSize = "1em";
+        teaser.textContent = "Here is a slideshow of the pics of da goat.";
+        messageElement.appendChild(teaser);
+
+        // Fade in teaser
+        setTimeout(()=>{
+            teaser.style.transition = "opacity 1s ease";
+            teaser.style.opacity = "1";
+        }, 300);
+
+        // Show slideshow after short pause
+        setTimeout(showLightbox, 1500);
+        return;
+    }
+
+    let charIndex = 0;
+    const currentLine = lines[lineIndex];
+    const lineSpan = document.createElement("div");
+    messageElement.appendChild(lineSpan);
+
+    function typeChar(){
+        if(charIndex < currentLine.length){
+            lineSpan.textContent += currentLine.charAt(charIndex);
+            charIndex++;
+            setTimeout(typeChar, 35); // Medium speed
+        } else {
+            setTimeout(()=>typeLines(lineIndex+1), 250); // Pause between lines
+        }
+    }
+
+    typeChar();
+}
+
+function reveal(){
+    messageElement.innerHTML = "";
+    typeLines();
+}
+
+
+// ===== CINEMATIC LIGHTBOX SLIDESHOW =====
+function showLightbox(){
+    const lightbox = document.getElementById("lightbox");
+    lightbox.style.display = "flex";
+    const imgs = lightbox.querySelectorAll("img");
+    let idx = 0;
+    imgs[idx].classList.add("active");
+
+    let interval = setInterval(()=>{
+        imgs[idx].classList.remove("active");
+        idx = (idx + 1) % imgs.length;
+        imgs[idx].classList.add("active");
+    }, 3000); // Change image every 3 seconds
+
+    // Click anywhere to close
+    lightbox.addEventListener("click", ()=>{
+        lightbox.style.display = "none";
+        clearInterval(interval);
+    });
+}
+
+
+// ===== FLOATING HEARTS =====
+function createHeart(){
+    const heart = document.createElement("div");
+    heart.classList.add("heart");
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.animationDuration = (Math.random() * 6 + 6) + "s";
+    heart.style.opacity = Math.random();
+    document.body.appendChild(heart);
+
+    setTimeout(()=>heart.remove(), 12000);
+}
+setInterval(createHeart, 300);
+
+</script>
+
+</body>
+</html>
